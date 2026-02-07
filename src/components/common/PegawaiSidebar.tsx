@@ -16,9 +16,8 @@ export default function PegawaiSidebar({ open, onClose }: Props) {
 
   const menu = [
     { label: "Profil Saya", icon: User, link: "/my-profile-pegawai/:id" },
-    { label: "Notifikasi", icon: Bell, link: "/notifikasi" },
-    { label: "Ubah Password", icon: Lock, link: "/change-password" },
-    { label: "Pengaturan", icon: Settings, link: "/settings" },
+    { label: "Notifikasi", icon: Bell, link: "/notification" },
+    { label: "Ubah Password", icon: Lock, link: "/change-password-pegawai" },
   ];
 
   const handleLogout = async () => {

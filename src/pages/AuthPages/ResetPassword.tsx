@@ -1,9 +1,9 @@
 import PageMeta from "../../components/common/PageMeta";
 import AuthLayout from "./AuthPageLayout";
 import SignInForm from "../../components/auth/SignInForm";
-import ForgotPasswordForm from "../../components/auth/ForgotPasswordForm";
+import ResetPasswordForm from "../../components/auth/ResetPasswordForm";
 
-export default function ForgotPassword() {
+export default function ResetPassword() {
   return (
     <>
       <PageMeta
@@ -11,7 +11,7 @@ export default function ForgotPassword() {
         description="Lupa Password"
       />
       <AuthLayout>
-        <ForgotPasswordForm />
+        <ResetPasswordForm />
       </AuthLayout>
     </>
   );

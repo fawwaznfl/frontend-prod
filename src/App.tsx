@@ -4,7 +4,6 @@ import SignUp from "./pages/AuthPages/SignUp";
 import ForgotPassword from "./pages/AuthPages/ForgotPassword";
 import NotFound from "./pages/OtherPage/NotFound";
 import Home from "./pages/Dashboard/Home";
-import UserProfiles from "./pages/ProfilePage";
 import Calendar from "./pages/Calendar";
 import Blank from "./pages/Blank";
 import FormElements from "./pages/Forms/FormElements";
@@ -138,6 +137,8 @@ import NotificationPegawai from "./pages/User Interface/Notifications/Notificati
 import FaceRecognition from "./pages/Absensi/FaceRecognition";
 import FaceRecognitionRegisterPegawai from "./pages/User Interface/Face Recognition/FaceRecognitionRegisterPegawai";
 import ProfilePage from "./pages/ProfilePage";
+import ResetPasswordForm from "./components/auth/ResetPasswordForm";
+import ResetPassword from "./pages/AuthPages/ResetPassword";
 
 export default function App() {
   return (
@@ -148,6 +149,7 @@ export default function App() {
         <Route path="/" element={<PublicRoute><SignIn /> </PublicRoute>} />
         <Route path="/signup" element={<PublicRoute><SignUp /></PublicRoute>} />
         <Route path="/forgot-password" element={<PublicRoute><ForgotPassword/></PublicRoute>} />
+        <Route path="/reset-password" element={<PublicRoute><ResetPassword/></PublicRoute>} />
 
       {/* ROUTING UNTUK PEGAWAI */}
         <Route
