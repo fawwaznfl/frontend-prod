@@ -363,7 +363,7 @@ export default function KasbonPegawai() {
                         </td>
 
                         <td className="px-4 py-3">
-                        {(it.status === "pending" || it.status === "reject") && (
+                        {it.status === "pending" && (
                         <div className="flex gap-3">
                         <button
                           onClick={() => navigate(`/edit-kasbon-pegawai/${it.id}`)}

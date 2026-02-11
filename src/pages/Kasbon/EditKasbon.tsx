@@ -140,6 +140,15 @@ export default function EditKasbon() {
       return;
     }
 
+  if (name === "nominal") {
+    const clean = value.replace(/[^\d]/g, "");
+
+    setForm({
+      ...form,
+      nominal: clean,
+    });
+    return;
+  }
 
     setForm({ ...form, [name]: value });
   };
@@ -233,6 +242,21 @@ export default function EditKasbon() {
     (p) => String(p.company_id) === String(form.company_id)
   );
 
+  const formatRupiah = (value: string | number) => {
+    const num = Number(value || 0);
+
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    })
+      .format(num)
+      .replace("Rp", "Rp.");
+  };
+
+
+  // USER INTERFACE
   return (
     <>
       <PageMeta title="Edit Kasbon Pegawai" description="Edit kasbon pegawai" />
@@ -292,9 +316,9 @@ export default function EditKasbon() {
             <div>
               <Label>Nominal</Label>
               <Input
-                type="number"
+                type="text"
                 name="nominal"
-                value={form.nominal}
+                value={formatRupiah(form.nominal)}
                 onChange={handleChange}
                 placeholder="Masukkan nominal kasbon"
               />

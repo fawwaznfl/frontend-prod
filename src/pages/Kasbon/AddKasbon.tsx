@@ -129,6 +129,16 @@ export default function AddKasbon() {
       return;
     }
 
+    if (name === "nominal") {
+      const clean = value.replace(/[^\d]/g, "");
+
+      setForm({
+        ...form,
+        nominal: clean,
+      });
+      return;
+    }
+
     setForm({ ...form, [name]: value });
   };
 
@@ -212,6 +222,21 @@ export default function AddKasbon() {
     }
   };
 
+  const formatRupiah = (value: string | number) => {
+    const num = Number(value || 0);
+
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    })
+      .format(num)
+      .replace("Rp", "Rp.");
+  };
+
+
+  // USER INTERFACE
   return (
     <>
       <PageMeta title="Tambah Kasbon Pegawai" description="Add kasbon pegawai" />
@@ -300,9 +325,9 @@ export default function AddKasbon() {
             <div>
               <Label>Nominal</Label>
               <Input
-                type="number"
+                type="text"
                 name="nominal"
-                value={form.nominal}
+                value={formatRupiah(form.nominal)}
                 onChange={handleChange}
                 placeholder="Masukkan nominal kasbon"
               />

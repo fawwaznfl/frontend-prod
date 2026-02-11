@@ -56,7 +56,7 @@ export default function EditLokasi() {
         nama_lokasi: data.nama_lokasi ?? "",
         lat_kantor: data.lat_kantor ?? "",
         long_kantor: data.long_kantor ?? "",
-        radius: data.radius ?? "",
+        radius: String(data.radius ?? ""),
         status: data.status ?? "active",
         keterangan: data.keterangan ?? "",
       });
@@ -76,10 +76,58 @@ export default function EditLokasi() {
 
   // Handle input change
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
-  ) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+) => {
+  const { name, value } = e.target;
+
+  // pastikan radius selalu string
+  setForm({ 
+    ...form, 
+    [name]: name === "radius" ? String(value) : value 
+  });
+};
+
+  const handleGetLocation = () => {
+    if (!navigator.geolocation) {
+      Swal.fire("Error", "Browser tidak mendukung GPS", "error");
+      return;
+    }
+
+    Swal.fire({
+      title: "Mengambil lokasi...",
+      text: "Pastikan GPS aktif",
+      allowOutsideClick: false,
+      didOpen: () => Swal.showLoading(),
+    });
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+
+        setForm((prev) => ({
+          ...prev,
+          lat_kantor: latitude.toString(),
+          long_kantor: longitude.toString(),
+        }));
+
+        Swal.fire("Berhasil", "Lokasi berhasil diambil", "success");
+      },
+      (error) => {
+        let message = "Gagal mengambil lokasi";
+
+        if (error.code === 1) message = "Izin lokasi ditolak";
+        if (error.code === 2) message = "Lokasi tidak tersedia";
+        if (error.code === 3) message = "Request timeout";
+
+        Swal.fire("Error", message, "error");
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+      }
+    );
   };
+
 
   // Submit update
   const handleSubmit = async (e: React.FormEvent) => {
@@ -88,7 +136,12 @@ export default function EditLokasi() {
     try {
       const token = localStorage.getItem("token");
 
-      await api.put(`/lokasis/${id}`, form, {
+      const payload = {
+        ...form,
+        radius: String(form.radius),
+      };
+
+      await api.put(`/lokasis/${id}`, payload, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -139,7 +192,7 @@ export default function EditLokasi() {
 
           {/* Nama Lokasi */}
           <div>
-            <label className="block font-semibold mb-1">Nama Lokasi</label>
+            <label className="block font-semibold mb-1">Nama Lokasi kantor</label>
             <input
               type="text"
               name="nama_lokasi"
@@ -178,11 +231,20 @@ export default function EditLokasi() {
             </div>
           </div>
 
+          <button
+            type="button"
+            onClick={handleGetLocation}
+            className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg"
+          >
+            Ambil Lokasi Otomatis
+          </button>
+
+
           {/* Radius */}
           <div>
             <label className="block font-semibold mb-1">Radius (meter)</label>
             <input
-              type="number"
+              type="text"
               name="radius"
               value={form.radius}
               onChange={handleChange}

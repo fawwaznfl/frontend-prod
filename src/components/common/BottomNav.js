@@ -1,0 +1,11 @@
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { Home, Clock, User, History } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import absenIcon from "../../icons/absen.png";
+export default function BottomNav() {
+    const navigate = useNavigate();
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    const today = new Date().toISOString().slice(0, 10);
+    const pegawai_id = user?.id;
+    return (_jsxs("div", { className: "fixed bottom-0 left-0 right-0 z-50", children: [_jsx("div", { className: "absolute left-1/2 -translate-x-1/2 -top-6", children: _jsx("button", { onClick: () => navigate(`/absensi/pegawai/${pegawai_id}?tanggal=${today}`), className: "w-16 h-16 rounded-full bg-indigo-600 text-white \n          flex items-center justify-center shadow-xl \n          hover:bg-indigo-700 transition", children: _jsx("img", { src: absenIcon, alt: "Absensi", className: "w-8 h-8 object-contain" }) }) }), _jsxs("div", { className: "bg-white shadow-lg py-3 border-t rounded-t-3xl px-8 flex items-center justify-between", children: [_jsxs("div", { className: "flex gap-8", children: [_jsxs("div", { onClick: () => navigate("/home-pegawai"), className: "flex flex-col items-center text-indigo-600 cursor-pointer", children: [_jsx(Home, { className: "w-6 h-6" }), _jsx("p", { className: "text-xs", children: "Home" })] }), _jsxs("div", { onClick: () => pegawai_id && navigate(`/history-absen/${pegawai_id}`), className: "flex flex-col items-center text-gray-500 cursor-pointer", children: [_jsx(History, { className: "w-6 h-6" }), _jsx("p", { className: "text-xs", children: "History" })] })] }), _jsxs("div", { className: "flex gap-8", children: [_jsxs("div", { onClick: () => navigate(`/shift-mapping/self/${pegawai_id}`), className: "flex flex-col items-center text-gray-500 cursor-pointer", children: [_jsx(Clock, { className: "w-6 h-6" }), _jsx("p", { className: "text-xs", children: "Dinas Luar" })] }), _jsxs("div", { onClick: () => navigate("/my-profile-pegawai/:id"), className: "flex flex-col items-center text-gray-500 cursor-pointer", children: [_jsx(User, { className: "w-6 h-6" }), _jsx("p", { className: "text-xs", children: "Profile" })] })] })] })] }));
+}

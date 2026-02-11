@@ -176,7 +176,8 @@ export default function AddKasbonPegawai() {
                   limitKasbon.sisa <= 0 ? "text-red-600" : "text-green-700"
                 }
               >
-                Rp {limitKasbon.sisa.toLocaleString("id-ID")}
+                {limitKasbon.sisa < 0 ? "-" : ""}
+                  Rp {Math.abs(limitKasbon.sisa).toLocaleString("id-ID")}
               </b>
             </div>
           )}

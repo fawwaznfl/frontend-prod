@@ -34,6 +34,19 @@ const parseRupiah = (value: string) => {
   return Number(value.replace(/\D/g, "")) || 0;
 };
 
+const formatTanggalIndonesia = (dateString?: string) => {
+  if (!dateString) return "";
+
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return dateString;
+
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+
+  return `${day}-${month}-${year}`;
+};
+
 
 interface DualBarValueEditableBottomProps {
   title: string;
@@ -291,10 +304,10 @@ export default function HitungGajiPegawai() {
       jabatan: d.jabatan,
       bulan: d.bulan,
       tahun: d.tahun,
-      tanggal_mulai: d.start_date,
+      tanggal_mulai: formatTanggalIndonesia(d.start_date),
       rekening: d.rekening || "",
       tanggal_bergabung: d.tgl_join,
-      tanggal_akhir: d.end_date,
+      tanggal_akhir: formatTanggalIndonesia(d.end_date),
       gaji_pokok: Number(d.gaji_pokok) || 0,
       makan_transport: Number(d.makan_transport) || 0,
       total_reimbursement: Number(d.total_reimbursement) || 0,
@@ -661,7 +674,7 @@ export default function HitungGajiPegawai() {
             onBottomChange={(val) => {
               setForm((prev) => ({
                 ...prev,
-                saldo_kasbon_count: Math.min(val, prev.saldo_kasbon_count), 
+                saldo_kasbon_count: Math.min(val, prev.saldo_kasbon), 
               }));
             }}
           />

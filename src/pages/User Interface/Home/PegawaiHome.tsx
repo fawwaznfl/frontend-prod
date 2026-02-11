@@ -114,7 +114,7 @@ export default function PegawaiHome() {
 
       const total = data
         .filter((it: any) =>
-          ["pending", "approve", "reject"].includes(it.status)
+          ["pending", "approve"].includes(it.status)
         )
         .reduce((sum: number, it: any) => {
           return sum + Number(it.nominal || 0);

@@ -203,12 +203,6 @@ export default function LokasiPage() {
         rightContent={
           <div className="flex items-center gap-3">
           <button
-          onClick={() => navigate("/lokasi/pending")}
-          className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium px-4 py-2 rounded-xl"
-        >
-          ⏱️ Pending Location
-        </button>
-          <button
             onClick={() => navigate("/add-lokasi")}
             className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 py-2 rounded-xl"
           >

@@ -61,6 +61,22 @@ export default function EditReimbursementPegawai() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
 
+  if (name === "terpakai") {
+    const raw = parseNumber(value);
+    const terpakaiNum = Number(raw || 0);
+    const jumlahNum = Number(form.jumlah || 0);
+    const final = jumlahNum - terpakaiNum >= 0 ? jumlahNum - terpakaiNum : 0;
+
+    setForm((s) => ({
+      ...s,
+      terpakai: raw,
+      total: String(final),
+      sisa: String(final),
+    }));
+    return;
+  }
+
+
     // kategori selected -> isi otomatis
     if (name === "kategori_reimbursement_id") {
       const found = kategori.find((k) => String(k.id) === value);
@@ -190,6 +206,19 @@ export default function EditReimbursementPegawai() {
     }
   };
 
+  const formatRupiah = (value: string | number) => {
+    if (!value) return "";
+
+    const number = Math.floor(Number(value)); // buang desimal
+    return new Intl.NumberFormat("id-ID").format(number);
+  };
+
+  const parseNumber = (value: string) => {
+    return value.replace(/\D/g, "");
+  };
+
+
+  // USER INTERFACE
   return (
     <div className="w-full min-h-screen bg-[#F5F6FA] pb-28">
       <div className="bg-gradient-to-br from-[#4A4CFF] to-[#7A52FF] p-5 text-white text-center relative rounded-b-3xl">
@@ -226,7 +255,7 @@ export default function EditReimbursementPegawai() {
             <option value="">Pilih Kategori</option>
             {kategori.map((k) => (
               <option key={k.id} value={String(k.id)}>
-                {k.nama} — {Number(k.jumlah).toLocaleString()}
+                {k.nama} — Rp. {formatRupiah(k.jumlah)}
               </option>
             ))}
           </select>
@@ -265,10 +294,9 @@ export default function EditReimbursementPegawai() {
         <div className="space-y-1">
           <label className="text-sm text-gray-600">Jumlah (kategori)</label>
           <input
-            name="jumlah"
-            type="number"
-            value={form.jumlah}
+            type="text"
             readOnly
+            value={form.jumlah ? `Rp. ${formatRupiah(form.jumlah)}` : ""}
             className="w-full border rounded-xl px-4 py-3 bg-gray-100"
           />
         </div>
@@ -277,9 +305,9 @@ export default function EditReimbursementPegawai() {
         <div className="space-y-1">
           <label className="text-sm text-gray-600">Terpakai</label>
           <input
+            type="text"
             name="terpakai"
-            type="number"
-            value={form.terpakai}
+            value={form.terpakai ? `Rp. ${formatRupiah(form.terpakai)}` : ""}
             onChange={handleChange}
             className="w-full border rounded-xl px-4 py-3"
           />
@@ -289,10 +317,9 @@ export default function EditReimbursementPegawai() {
         <div className="space-y-1">
           <label className="text-sm text-gray-600">Total</label>
           <input
-            name="total"
-            type="number"
-            value={form.total}
+            type="text"
             readOnly
+            value={form.total ? `Rp. ${formatRupiah(form.total)}` : ""}
             className="w-full border rounded-xl px-4 py-3 bg-gray-100"
           />
         </div>
@@ -301,10 +328,9 @@ export default function EditReimbursementPegawai() {
         <div className="space-y-1">
           <label className="text-sm text-gray-600">Sisa</label>
           <input
-            name="sisa"
-            type="number"
-            value={form.sisa}
+            type="text"
             readOnly
+            value={form.sisa ? `Rp. ${formatRupiah(form.sisa)}` : ""}
             className="w-full border rounded-xl px-4 py-3 bg-gray-100"
           />
         </div>

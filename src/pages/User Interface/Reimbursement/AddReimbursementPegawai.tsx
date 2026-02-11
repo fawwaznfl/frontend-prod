@@ -112,18 +112,26 @@ const handleChange = (
 
   // terpakai direfresh otomatis
   if (name === "terpakai") {
-    const terpakaiNum = Number(value || 0);
+    const clean = value.replace(/[^\d]/g, "");
+
+    const terpakaiNum = Number(clean || 0);
     const jumlahNum = Number(form.jumlah || 0);
-    const final = jumlahNum - terpakaiNum >= 0 ? jumlahNum - terpakaiNum : 0;
+
+    const final =
+      jumlahNum - terpakaiNum >= 0
+        ? jumlahNum - terpakaiNum
+        : 0;
 
     setForm((s) => ({
       ...s,
-      terpakai: value,
+      terpakai: clean, // simpan angka murni
       total: String(final),
       sisa: String(final),
     }));
+
     return;
   }
+
 
   setForm((s) => ({ ...s, [name]: value }));
 };
@@ -163,6 +171,15 @@ const handleChange = (
     return;
   }
 
+  if (!form.tanggal) {
+    Swal.fire({
+      icon: "warning",
+      title: "Tanggal wajib diisi",
+    });
+    return;
+  }
+
+
   if (form.metode_reim === "transfer" && !form.no_rekening) {
     Swal.fire({
       icon: "warning",
@@ -195,17 +212,31 @@ const handleChange = (
     });
 
   } catch (err: any) {
-    console.log("ERR RESPONSE:", err.response?.data);
+  console.log("ERR RESPONSE:", err.response?.data);
 
-    Swal.fire({
-    icon: "success",
-    title: "Berhasil",
-    text: "Reimbursement berhasil diajukan!"
+  Swal.fire({
+    icon: "error",
+    title: "Gagal",
+    text: err.response?.data?.message || "Terjadi kesalahan",
   }).then(() => {
     navigate("/reimbursement-pegawai");
   });
   }
 };
+
+const formatRupiah = (value: number | string) => {
+  const num = Number(value || 0);
+
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  })
+    .format(num)
+    .replace("Rp", "Rp. ");
+};
+
 
 
 
@@ -254,7 +285,7 @@ const handleChange = (
           <option value="">Pilih Kategori</option>
           {kategori.map((k) => (
             <option key={k.id} value={String(k.id)}>
-              {k.nama} — {Number(k.jumlah).toLocaleString()}
+              {k.nama} — {formatRupiah(k.jumlah)}
             </option>
           ))}
         </select>
@@ -294,9 +325,8 @@ const handleChange = (
         <div className="space-y-1">
           <label className="text-sm text-gray-600">Jumlah dari kategori</label>
           <input
-            name="jumlah"
-            type="number"
-            value={form.jumlah}
+            type="text"
+            value={formatRupiah(form.jumlah)}
             readOnly
             className="w-full border rounded-xl px-4 py-3 bg-gray-100"
           />
@@ -307,8 +337,8 @@ const handleChange = (
           <label className="text-sm text-gray-600">Terpakai</label>
           <input
             name="terpakai"
-            type="number"
-            value={form.terpakai}
+            type="text"
+            value={formatRupiah(form.terpakai)}
             onChange={handleChange}
             className="w-full border rounded-xl px-4 py-3"
           />
@@ -319,8 +349,8 @@ const handleChange = (
           <label className="text-sm text-gray-600">Total</label>
           <input
             name="total"
-            type="number"
-            value={form.total}
+            type="text"
+            value={formatRupiah(form.total)}
             readOnly
             className="w-full border rounded-xl px-4 py-3 bg-gray-100"
           />
@@ -331,8 +361,8 @@ const handleChange = (
           <label className="text-sm text-gray-600">Sisa</label>
           <input
             name="sisa"
-            type="number"
-            value={form.sisa}
+            type="text"
+            value={formatRupiah(form.sisa)}
             readOnly
             className="w-full border rounded-xl px-4 py-3 bg-gray-100"
           />

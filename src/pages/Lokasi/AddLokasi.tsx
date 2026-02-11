@@ -213,7 +213,7 @@ export default function AddLokasi() {
               type="button"
               onClick={handleGetLocation}
               className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg"
-            >e
+            >
                Ambil Lokasi Otomatis
             </button>
           </div>

@@ -317,28 +317,50 @@ export default function ReimbursementPegawai() {
                         )}
                       </td>
                       <td className="px-4 py-3">
-                      {it.status !== "approve" && it.status !== "approved" ? (
-                        <div className="flex gap-3">
-                          <button
-                            onClick={() => navigate(`/edit-reimbursement-pegawai/${it.id}`)}
-                            className="text-blue-600"
-                          >
-                            <Pencil className="w-4 h-4" />
-                          </button>
+                        {(() => {
+                          const status = it.status?.toLowerCase();
 
-                          <button
-                            onClick={() => handleDelete(it.id)}
-                            className="text-red-600"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                      ) : (
-                        <span className="text-xs text-gray-400">
-                          Data sudah disetujui
-                        </span>
-                      )}
-                    </td>
+                          // ================= APPROVED =================
+                          if (status === "approve" || status === "approved") {
+                            return (
+                              <span className="text-xs text-green-600 font-medium">
+                                Data sudah disetujui
+                              </span>
+                            );
+                          }
+
+                          // ================= REJECTED =================
+                          if (status === "reject" || status === "rejected") {
+                            return (
+                              <span className="text-xs text-red-600 font-medium">
+                                Reimbursement ditolak
+                              </span>
+                            );
+                          }
+
+                          // ================= PENDING =================
+                          return (
+                            <div className="flex gap-3">
+                              <button
+                                onClick={() =>
+                                  navigate(`/edit-reimbursement-pegawai/${it.id}`)
+                                }
+                                className="text-blue-600"
+                              >
+                                <Pencil className="w-4 h-4" />
+                              </button>
+
+                              <button
+                                onClick={() => handleDelete(it.id)}
+                                className="text-red-600"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </div>
+                          );
+                        })()}
+                      </td>
+
                     </tr>
                   );
                 })

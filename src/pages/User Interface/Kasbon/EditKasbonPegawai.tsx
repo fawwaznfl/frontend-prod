@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ChevronLeft } from "lucide-react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams } from "react-router-dom";
 import api from "../../../api/axios";
 import Swal from "sweetalert2";
 import BottomNav from "../../../components/common/BottomNav";
@@ -141,6 +141,15 @@ export default function EditKasbonPegawai() {
     }
   };
 
+  const formatRupiah = (value: string | number) => {
+    if (!value) return "";
+
+    const number = Math.floor(Number(value)); // buang desimal
+    return new Intl.NumberFormat("id-ID").format(number);
+  };
+
+
+  // USER INTERFACE
   return (
     <div className="w-full min-h-screen bg-[#F5F6FA] pb-28">
       {/* HEADER */}
@@ -182,11 +191,14 @@ export default function EditKasbonPegawai() {
         {/* NOMINAL */}
         <div className="space-y-1">
           <label className="text-sm text-gray-600">Nominal</label>
-          <input
-            type="number"
+         <input
+            type="text"
             name="nominal"
-            value={form.nominal}
-            onChange={handleChange}
+            value={form.nominal ? `Rp. ${formatRupiah(form.nominal)}` : ""}
+            onChange={(e) => {
+              const raw = e.target.value.replace(/\D/g, "");
+              setForm((s) => ({ ...s, nominal: raw }));
+            }}
             className="w-full border rounded-xl px-4 py-3"
             placeholder="Masukkan nominal"
           />
