@@ -339,7 +339,8 @@ export default function EditPegawai() {
         rekening: data.rekening ?? "",
         nama_rekening: data.nama_rekening ?? "",
         alamat: data.alamat ?? "",
-        gaji_pokok: data.gaji_pokok ?? "",
+        gaji_pokok: String(data.gaji_pokok || "").replace(/\D/g, ""),
+
         makan_transport: data.makan_transport ?? "",
         lembur: data.lembur ?? "",
         kehadiran: data.kehadiran ?? "",
@@ -367,15 +368,14 @@ export default function EditPegawai() {
     fetchDetail();
   }, []);
 
-    const formatRupiah = (value: string) => {
-    const numberString = value.replace(/\D/g, "");
-    const formatted = new Intl.NumberFormat("id-ID", {
-      style: "currency",
-      currency: "IDR",
-    }).format(Number(numberString));
+  const formatRupiah = (value: string) => {
+    if (!value) return "";
 
-    return formatted.replace(",00", ""); 
+    const number = value.replace(/\D/g, "");
+
+    return "Rp. " + new Intl.NumberFormat("id-ID").format(Number(number));
   };
+
 
   const handleGajiPokokChange = (e: any) => {
     const raw = e.target.value.replace(/\D/g, "");
@@ -504,13 +504,13 @@ export default function EditPegawai() {
     }));
   };
 
-  const handleMakanTransportChange = (e: any) => {
-  const raw = e.target.value.replace(/\D/g, "");
-  setFormData((prev) => ({
-    ...prev,
-    makan_transport: raw,
-  }));
-};
+const handleMakanTransportChange = (e: any) => {
+    const raw = e.target.value.replace(/\D/g, "");
+    setFormData((prev) => ({
+      ...prev,
+      makan_transport: raw,
+    }));
+  };
 
   const handleLemburChange = (e: any) => {
   const raw = e.target.value.replace(/\D/g, "");
@@ -1091,7 +1091,7 @@ export default function EditPegawai() {
                   <div className="relative">
                     <Input
                       name="gaji_pokok"
-                      value={"Rp. " + formData.gaji_pokok}
+                      value={formatRupiah(formData.gaji_pokok)}
                       onChange={handleGajiPokokChange}
                       className="pr-20"
                     />
@@ -1107,7 +1107,7 @@ export default function EditPegawai() {
                   <div className="relative">
                     <Input
                       name="makan_transport"
-                      value={"Rp. " + formData.makan_transport}
+                      value={formatRupiah(formData.makan_transport)}
                       onChange={handleMakanTransportChange}
                       className="pr-20"
                     />
@@ -1122,7 +1122,7 @@ export default function EditPegawai() {
                   <div className="relative">
                     <Input
                       name="lembur"
-                      value={"Rp. " + (formData.lembur)}
+                      value={formatRupiah(formData.lembur)}
                       onChange={handleLemburChange}
                       className="pr-20"  
                     />
@@ -1137,7 +1137,7 @@ export default function EditPegawai() {
                   <div className="relative">
                     <Input
                       name="kehadiran"
-                      value={"Rp. " + (formData.kehadiran)}
+                      value={formatRupiah(formData.kehadiran)}
                       onChange={handleKehadiranChange}
                       className="pr-20"  
                     />
@@ -1152,7 +1152,7 @@ export default function EditPegawai() {
                   <div className="relative">
                     <Input
                       name="thr"
-                      value={"Rp. " + (formData.thr)}
+                      value={formatRupiah(formData.thr)}
                       onChange={handleThrChange}
                       className="pr-20"  
                     />
@@ -1167,7 +1167,7 @@ export default function EditPegawai() {
                   <div className="relative">
                     <Input
                       name="bonus_pribadi" 
-                      value={"Rp. " + (formData.bonus_pribadi)}
+                      value={formatRupiah(formData.bonus_pribadi)}
                       onChange={handleBonusPribadiChange}
                       className="pr-20"  
                     />
@@ -1182,7 +1182,7 @@ export default function EditPegawai() {
                   <div className="relative">
                     <Input
                       name="bonus_team"
-                      value={"Rp. " + (formData.bonus_team)}
+                      value={formatRupiah(formData.bonus_team)}
                       onChange={handleBonusTeamChange}
                       className="pr-20"  
                     />
@@ -1197,7 +1197,7 @@ export default function EditPegawai() {
                   <div className="relative">
                     <Input
                       name="bonus_jackpot" 
-                      value={"Rp. " + (formData.bonus_jackpot)}
+                      value={formatRupiah(formData.bonus_jackpot)}
                       onChange={handleBonusJackpotChange}
                       className="pr-20"  
                     />
@@ -1221,7 +1221,7 @@ export default function EditPegawai() {
                   <div className="relative">
                     <Input
                       name="izin"
-                      value={"Rp. " + (formData.izin)}  
+                      value={formatRupiah(formData.izin)}
                       onChange={handleIzinChange}
                       className="pr-20"  
                     />
@@ -1236,7 +1236,7 @@ export default function EditPegawai() {
                   <div className="relative">
                     <Input
                       name="terlambat"
-                      value={"Rp. " + (formData.terlambat)}  
+                      value={formatRupiah(formData.terlambat)}
                       onChange={handleTerlambatChange}
                       className="pr-20"  
                     />
@@ -1277,7 +1277,7 @@ export default function EditPegawai() {
                   <div className="relative">
                     <Input
                       name="saldo_kasbon"
-                      value={"Rp. " + (formData.saldo_kasbon)}  
+                      value={formatRupiah(formData.saldo_kasbon)}
                       onChange={handleSaldoKasbonChange}
                       className="pr-20"  
                     />
@@ -1310,7 +1310,7 @@ export default function EditPegawai() {
                   <div className="relative">
                     <Input
                       name="tungangan bpjs kesehatan"
-                      value={"Rp. " + (formData.tunjangan_bpjs_kesehatan)}  
+                      value={formatRupiah(formData.tunjangan_bpjs_kesehatan)}
                       onChange={handleBPJSKesehatanChange}
                       className="pr-20"  
                     />
@@ -1322,7 +1322,7 @@ export default function EditPegawai() {
                   <div className="relative">
                     <Input
                       name="tungangan bpjs ketenagakerjaan"
-                      value={"Rp. " + (formData.tunjangan_bpjs_ketenagakerjaan)}  
+                      value={formatRupiah(formData.tunjangan_bpjs_ketenagakerjaan)}
                       onChange={handleBPJSKetenagakerjaanChange}
                       className="pr-20"  
                     />
@@ -1334,7 +1334,7 @@ export default function EditPegawai() {
                   <div className="relative">
                     <Input
                       name="potongan bpjs kesehatan"
-                      value={"Rp. " + (formData.potongan_bpjs_kesehatan)}  
+                      value={formatRupiah(formData.potongan_bpjs_kesehatan)} 
                       onChange={handlePotonganBPJSKesehatanChange}
                       className="pr-20"  
                     />
@@ -1346,7 +1346,7 @@ export default function EditPegawai() {
                   <div className="relative">
                     <Input
                       name="potongan bpjs ketenagakerjaan"
-                      value={"Rp. " + (formData.potongan_bpjs_ketenagakerjaan)}  
+                      value={formatRupiah(formData.potongan_bpjs_ketenagakerjaan)}
                       onChange={handlePotonganBPJSKetenagakerjaanChange}
                       className="pr-20"  
                     />
@@ -1358,7 +1358,7 @@ export default function EditPegawai() {
                   <div className="relative">
                     <Input
                       name="tungangan pajak"
-                      value={"Rp. " + (formData.tunjangan_pajak)}  
+                      value={formatRupiah(formData.tunjangan_pajak)}
                       onChange={handleTunjanganPajakChange}
                       className="pr-20"  
                     />

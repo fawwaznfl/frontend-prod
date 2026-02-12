@@ -174,7 +174,6 @@ export default function Pegawais() {
     if (!path) return "/default-avatar.jpg";
 
     if (path.startsWith("http")) {
-      console.log("FULL URL:", path);
       return path;
     }
 

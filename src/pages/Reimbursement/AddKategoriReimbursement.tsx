@@ -103,6 +103,29 @@ export default function AddKategoriReimbursement() {
     }
   };
 
+  const formatRupiah = (value: string) => {
+    if (!value) return "";
+
+    const numberString = value.replace(/\D/g, "");
+    return "Rp. " + new Intl.NumberFormat("id-ID").format(Number(numberString));
+  };
+
+  const parseRupiah = (value: string) => {
+    return value.replace(/\D/g, "");
+  };
+
+  const handleJumlahChange = (e: any) => {
+    const raw = parseRupiah(e.target.value);
+
+    setForm((prev) => ({
+      ...prev,
+      jumlah: raw,
+    }));
+  };
+
+
+
+  // USER INTERFACE
   return (
     <>
       <PageMeta
@@ -170,11 +193,11 @@ export default function AddKategoriReimbursement() {
               Jumlah Maksimal
             </label>
             <input
-              type="number"
+              type="text"
               name="jumlah"
               placeholder="Masukkan jumlah maksimal..."
-              value={form.jumlah}
-              onChange={handleChange}
+              value={formatRupiah(form.jumlah)}
+              onChange={handleJumlahChange}
               required
               className="border px-3 py-2 rounded-lg w-full bg-white dark:bg-gray-700 dark:text-white"
             />
