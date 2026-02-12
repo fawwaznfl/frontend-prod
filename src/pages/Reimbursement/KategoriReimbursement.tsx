@@ -184,7 +184,7 @@ export default function KategoriReimbursement() {
     <>
       <PageMeta title="Kategori Reimbursement" description="Daftar Kategori Reimbursement" />
       <PageHeader
-        pageTitle="Kategori Reimbursement Hari ini WFC"
+        pageTitle="Kategori Reimbursement"
         titleClass="text-[32px] dark:text-white"
         rightContent={
           <button
