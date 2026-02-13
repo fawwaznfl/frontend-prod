@@ -124,6 +124,8 @@ export default function LemburPegawaiPage() {
             setPhotoData(data);
             setIsVerified(true);
             stopCamera();
+            // 🔥 AUTO SIMPAN ABSEN
+            await handleSubmitAbsen(data);
         }
         else {
             setPhotoData(null);
@@ -138,18 +140,14 @@ export default function LemburPegawaiPage() {
         }
         return new Blob([new Uint8Array(byteArrays)], { type: "image/jpeg" });
     }
-    const handleSubmitAbsen = async () => {
-        if (!photoData) {
-            return Swal.fire("Error", "Ambil foto terlebih dahulu", "error");
-        }
-        if (!isVerified) {
-            return Swal.fire("Error", "Wajah belum terverifikasi", "error");
-        }
-        if (!location.lat || !location.lon) {
-            return Swal.fire("Error", "Lokasi belum terdeteksi", "error");
-        }
+    const handleSubmitAbsen = async (photoOverride) => {
+        const photo = photoOverride || photoData;
+        if (!photo)
+            return;
+        if (!location.lat || !location.lon)
+            return;
         try {
-            const blob = base64ToBlob(photoData);
+            const blob = base64ToBlob(photo);
             const formData = new FormData();
             formData.append("pegawai_id", pegawai_id);
             formData.append("tanggal_lembur", today);
@@ -158,9 +156,8 @@ export default function LemburPegawaiPage() {
             await api.post("/lembur/auto", formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
-            Swal.fire("Berhasil", "Absen lembur berhasil disimpan", "success")
+            Swal.fire("Berhasil", "Absen lembur tersimpan", "success")
                 .then(() => navigate("/home-pegawai"));
-            setAbsenStatus((prev) => prev === "masuk" ? "pulang" : "selesai");
         }
         catch (err) {
             Swal.fire("Gagal", err.response?.data?.message || "Terjadi kesalahan", "error");
@@ -173,7 +170,5 @@ export default function LemburPegawaiPage() {
                         ? "Absen Pulang Pegawai"
                         : "Absensi Selesai" }), _jsx(ComponentCard, { title: "Masuk Lembur", children: shiftToday ? (_jsxs(_Fragment, { children: [_jsxs("p", { children: [_jsx("strong", { children: "Tanggal:" }), " ", formatTanggal(new Date())] }), _jsxs("p", { children: [_jsx("strong", { children: "Shift:" }), " ", shiftToday.shift.nama] }), _jsxs("p", { children: [_jsx("strong", { children: "Jam Masuk:" }), " ", shiftToday.shift.jam_masuk] }), _jsxs("p", { children: [_jsx("strong", { children: "Jam Pulang:" }), " ", shiftToday.shift.jam_pulang] })] })) : (_jsxs("div", { className: "flex flex-col items-center justify-center text-center py-6 space-y-2", children: [_jsx("span", { className: "text-4xl", children: "\uD83D\uDCC5" }), _jsx("p", { className: "text-lg font-semibold text-gray-800 dark:text-gray-200", children: formatTanggal(new Date()) })] })) }), _jsx(ComponentCard, { title: "Jam Sekarang", children: _jsxs("div", { className: "flex items-center gap-3", children: [_jsx(Clock, { className: "w-6 h-6" }), _jsx("p", { className: "text-lg font-semibold", children: currentTime })] }) }), absenStatus !== "selesai" && (_jsxs(ComponentCard, { title: "Lokasi Pegawai", children: [location.lat ? (_jsxs("p", { children: ["Lat: ", location.lat, " \u2014 Lon: ", location.lon] })) : (_jsx("p", { className: "text-gray-500", children: "Lokasi belum terdeteksi" })), _jsx("button", { onClick: handleGetLocation, className: "bg-blue-600 w-full py-2 mt-3 text-white rounded-xl", children: "Deteksi Lokasi" })] })), absenStatus !== "selesai" && (_jsxs(ComponentCard, { title: "Kamera Absen", children: [_jsx("video", { ref: videoRef, autoPlay: true, className: "w-full rounded-xl bg-black" }), _jsx("canvas", { ref: canvasRef, className: "hidden" }), !stream ? (_jsx("button", { onClick: startCamera, className: "bg-green-600 text-white w-full mt-3 py-2 rounded-xl", children: "Aktifkan Kamera" })) : (_jsx("button", { onClick: stopCamera, className: "bg-red-600 text-white w-full mt-3 py-2 rounded-xl", children: "Matikan Kamera" })), _jsx("button", { onClick: takePhoto, disabled: isVerifying, className: `w-full mt-3 py-2 rounded-xl text-white ${isVerifying
                             ? "bg-gray-400 cursor-not-allowed"
-                            : "bg-yellow-600 hover:bg-yellow-700"}`, children: isVerifying ? "Memverifikasi Wajah..." : "Ambil Foto & Verifikasi" }), photoData && isVerified && (_jsx("div", { className: "bg-green-100 text-green-700 px-4 py-2 rounded-xl text-sm text-center mt-3", children: "Wajah Terverifikasi! Silakan simpan absen lembur." })), _jsx("button", { onClick: handleSubmitAbsen, disabled: !isVerified, className: `w-full mt-3 py-2 rounded-xl text-white ${isVerified
-                            ? "bg-blue-700 hover:bg-blue-800"
-                            : "bg-gray-400 cursor-not-allowed"}`, children: "Simpan Absen" }), photoData && (_jsx("img", { src: photoData, className: "w-full rounded-xl mt-3" }))] }))] }));
+                            : "bg-yellow-600 hover:bg-yellow-700"}`, children: isVerifying ? "Memverifikasi Wajah..." : "Ambil Foto & Verifikasi" }), photoData && (_jsx("img", { src: photoData, className: "w-full rounded-xl mt-3" }))] }))] }));
 }

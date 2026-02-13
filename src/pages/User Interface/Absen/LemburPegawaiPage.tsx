@@ -163,6 +163,9 @@ export default function LemburPegawaiPage() {
       setPhotoData(data);
       setIsVerified(true);
       stopCamera();
+
+      // 🔥 AUTO SIMPAN ABSEN
+      await handleSubmitAbsen(data);
     } else {
       setPhotoData(null);
       setIsVerified(false);
@@ -181,21 +184,14 @@ export default function LemburPegawaiPage() {
     return new Blob([new Uint8Array(byteArrays)], { type: "image/jpeg" });
   }
 
-  const handleSubmitAbsen = async () => {
-    if (!photoData) {
-      return Swal.fire("Error", "Ambil foto terlebih dahulu", "error");
-    }
+  const handleSubmitAbsen = async (photoOverride?: string) => {
+    const photo = photoOverride || photoData;
 
-    if (!isVerified) {
-      return Swal.fire("Error", "Wajah belum terverifikasi", "error");
-    }
-
-    if (!location.lat || !location.lon) {
-      return Swal.fire("Error", "Lokasi belum terdeteksi", "error");
-    }
+    if (!photo) return;
+    if (!location.lat || !location.lon) return;
 
     try {
-      const blob = base64ToBlob(photoData);
+      const blob = base64ToBlob(photo);
       const formData = new FormData();
 
       formData.append("pegawai_id", pegawai_id);
@@ -207,12 +203,8 @@ export default function LemburPegawaiPage() {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      Swal.fire("Berhasil", "Absen lembur berhasil disimpan", "success")
+      Swal.fire("Berhasil", "Absen lembur tersimpan", "success")
         .then(() => navigate("/home-pegawai"));
-
-      setAbsenStatus((prev) =>
-        prev === "masuk" ? "pulang" : "selesai"
-      );
 
     } catch (err: any) {
       Swal.fire(
@@ -222,6 +214,7 @@ export default function LemburPegawaiPage() {
       );
     }
   };
+
 
 
 
@@ -318,24 +311,6 @@ export default function LemburPegawaiPage() {
             }`}
           >
             {isVerifying ? "Memverifikasi Wajah..." : "Ambil Foto & Verifikasi"}
-          </button>
-
-          {photoData && isVerified && (
-            <div className="bg-green-100 text-green-700 px-4 py-2 rounded-xl text-sm text-center mt-3">
-              Wajah Terverifikasi! Silakan simpan absen lembur.
-            </div>
-          )}
-
-          <button
-            onClick={handleSubmitAbsen}
-            disabled={!isVerified}
-            className={`w-full mt-3 py-2 rounded-xl text-white ${
-              isVerified
-                ? "bg-blue-700 hover:bg-blue-800"
-                : "bg-gray-400 cursor-not-allowed"
-            }`}
-          >
-            Simpan Absen
           </button>
 
           {photoData && (
