@@ -1,12 +1,14 @@
 {
   "compilerOptions": {
     "jsx": "react-jsx",
-    "lib": ["DOM", "ESNext"],
+    "lib": ["dom", "esnext"],
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "node",
     "strict": true,
+    "resolveJsonModule": true,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true
   },
   "include": ["src"]
